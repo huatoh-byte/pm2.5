@@ -3,7 +3,7 @@ import requests
 import urllib3
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
 from app.models import db, User
-import app  # Access app.latest_aqi_data dynamically
+import app
 
 main = Blueprint('main', __name__)
 
@@ -131,3 +131,135 @@ def login():
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('main.login'))
+
+
+# 5. ADVICE
+@main.route('/advice')
+def advice():
+    return render_template('advice.html')
+
+# pretest
+# 5. PM2.5 PRE-TEST
+
+PRETEST_QUESTIONS = [
+    {
+        'question': 'PM2.5 หมายถึงข้อใด',
+        'options': {
+            'A': 'ฝุ่นที่มีเส้นผ่านศูนย์กลางไม่เกิน 25 ไมโครเมตร',
+            'B': 'ฝุ่นที่มีเส้นผ่านศูนย์กลางไม่เกิน 2.5 ไมโครเมตร',
+            'C': 'ก๊าซพิษที่เกิดจากรถยนต์เท่านั้น',
+            'D': 'ฝุ่นที่สามารถมองเห็นได้ด้วยตาเปล่าเท่านั้น'
+        },
+        'answer': 'B'
+    },
+    {
+        'question': 'ข้อใดเป็นแหล่งกำเนิด PM2.5',
+        'options': {
+            'A': 'การเผาขยะและเศษวัสดุในที่โล่ง',
+            'B': 'ไอเสียจากยานพาหนะ',
+            'C': 'กระบวนการเผาไหม้จากกิจกรรมบางประเภท',
+            'D': 'ถูกทุกข้อ'
+        },
+        'answer': 'D'
+    },
+    {
+        'question': 'กลุ่มใดมีความเสี่ยงต่อผลกระทบจาก PM2.5 มากกว่าคนทั่วไป',
+        'options': {
+            'A': 'เด็ก ผู้สูงอายุ และผู้ป่วยโรคหัวใจหรือทางเดินหายใจ',
+            'B': 'ผู้ที่เล่นกีฬาเท่านั้น',
+            'C': 'ผู้ที่ทำงานในเวลากลางคืนเท่านั้น',
+            'D': 'ผู้ที่อาศัยอยู่ต่างจังหวัดเท่านั้น'
+        },
+        'answer': 'A'
+    },
+    {
+        'question': 'หากค่า AQI เท่ากับ 120 คุณภาพอากาศอยู่ในระดับใด',
+        'options': {
+            'A': 'Good',
+            'B': 'Moderate',
+            'C': 'Unhealthy for Sensitive Groups',
+            'D': 'Unhealthy'
+        },
+        'answer': 'C'
+    },
+    {
+        'question': 'เมื่อ AQI อยู่ในช่วง 101–150 กลุ่มเสี่ยงควรทำอย่างไร',
+        'options': {
+            'A': 'เพิ่มการออกกำลังกายกลางแจ้ง',
+            'B': 'ลดกิจกรรมกลางแจ้งที่ใช้แรงหรือใช้เวลานาน',
+            'C': 'เปิดหน้าต่างเพื่อรับอากาศจากภายนอกให้มากขึ้น',
+            'D': 'ไม่จำเป็นต้องเปลี่ยนพฤติกรรมใด ๆ'
+        },
+        'answer': 'B'
+    },
+    {
+        'question': 'หาก AQI อยู่ในช่วง 201–300 ข้อใดเหมาะสมที่สุด',
+        'options': {
+            'A': 'คุณภาพอากาศดี สามารถทำกิจกรรมได้ตามปกติ',
+            'B': 'เฉพาะผู้สูงอายุเท่านั้นที่ต้องระวัง',
+            'C': 'ทุกคนควรลดหรือหลีกเลี่ยงกิจกรรมกลางแจ้งที่ใช้แรง โดยเฉพาะกลุ่มเสี่ยง',
+            'D': 'ควรออกกำลังกายกลางแจ้งเพื่อให้ร่างกายปรับตัว'
+        },
+        'answer': 'C'
+    },
+    {
+        'question': 'พฤติกรรมใดช่วยลดการเกิดมลพิษทางอากาศได้',
+        'options': {
+            'A': 'ติดเครื่องยนต์รถยนต์ทิ้งไว้ขณะจอด',
+            'B': 'เผาใบไม้แทนการนำไปจัดการด้วยวิธีอื่น',
+            'C': 'ใช้ระบบขนส่งสาธารณะเมื่อสามารถทำได้',
+            'D': 'เผาขยะครั้งละน้อยเพื่อให้เกิดควันน้อยลง'
+        },
+        'answer': 'C'
+    },
+    {
+        'question': 'ข้อใดกล่าวถูกต้องเกี่ยวกับการตรวจสอบ AQI',
+        'options': {
+            'A': 'ใช้เพื่อทราบระดับคุณภาพอากาศและช่วยวางแผนกิจกรรมได้',
+            'B': 'ใช้เพื่อบอกอุณหภูมิของอากาศเท่านั้น',
+            'C': 'ถ้าไม่เห็นฝุ่นด้วยตาเปล่า ไม่จำเป็นต้องตรวจ AQI',
+            'D': 'AQI ไม่มีความเกี่ยวข้องกับผลกระทบต่อสุขภาพ'
+        },
+        'answer': 'A'
+    }
+]
+
+
+@main.route('/pretest', methods=['GET', 'POST'])
+def pretest():
+    if 'user_id' not in session:
+        return redirect(url_for('main.login'))
+
+    if request.method == 'POST':
+        score = 0
+        results = []
+
+        for i, question in enumerate(PRETEST_QUESTIONS):
+            question_number = i + 1
+            selected_answer = request.form.get(f'question_{question_number}')
+            correct_answer = question['answer']
+
+            is_correct = selected_answer == correct_answer
+
+            if is_correct:
+                score += 1
+
+            results.append({
+                'number': question_number,
+                'question': question['question'],
+                'selected': selected_answer,
+                'correct': correct_answer,
+                'is_correct': is_correct
+            })
+
+        return render_template(
+            'pretest_result.html',
+            score=score,
+            total=len(PRETEST_QUESTIONS),
+            results=results
+        )
+
+    return render_template(
+        'pretest.html',
+        questions=PRETEST_QUESTIONS
+    )

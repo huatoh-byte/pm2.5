@@ -1,0 +1,659 @@
+/* =========================
+   GLOBAL
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    font-family: Arial, "Noto Sans Thai", sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2f1 0%,
+            #dfe8e5 50%,
+            #edf1ef 100%
+        );
+
+    color: #26332f;
+}
+
+/* Remove default link styling */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* =========================
+   MAIN CONTAINER
+========================= */
+
+.main-dashboard,
+.login-box,
+.pretest-container,
+.advice-container {
+    width: min(900px, 92%);
+    margin: 45px auto;
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.main-dashboard {
+    text-align: center;
+}
+
+.main-dashboard > h1 {
+    margin-bottom: 8px;
+    font-size: 30px;
+    color: #263b34;
+}
+
+.main-dashboard > h2 {
+    max-width: 750px;
+    margin: 0 auto 18px;
+
+    font-size: 16px;
+    line-height: 1.7;
+    font-weight: normal;
+
+    color: #66736f;
+}
+
+.main-dashboard > p {
+    color: #65716d;
+}
+
+/* =========================
+   DIVIDERS
+========================= */
+
+hr {
+    border: 0;
+    height: 1px;
+
+    margin: 30px 0;
+
+    background: rgba(70, 90, 84, 0.15);
+}
+
+/* =========================
+   AQI CARD
+========================= */
+
+.aqi-card {
+    position: relative;
+
+    width: min(650px, 100%);
+    margin: 20px auto;
+    padding: 28px 35px;
+
+    background: rgba(255, 255, 255, 0.78);
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 12px 35px rgba(54, 74, 68, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+
+    backdrop-filter: blur(12px);
+
+    text-align: center;
+}
+
+.aqi-card p {
+    margin: 10px 0;
+}
+
+.aqi-card p strong {
+    color: #34443e;
+}
+
+/* Station name */
+.aqi-card p:first-child {
+    font-size: 17px;
+}
+
+/* PM2.5 */
+.aqi-card p:nth-child(2) {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+/* Level */
+#level {
+    font-size: 17px;
+    font-weight: bold;
+}
+
+/* Advice */
+#advice {
+    color: #66736f;
+    line-height: 1.5;
+}
+
+/* AQI */
+.aqi-card p:nth-child(5) {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* Last updated */
+.aqi-card small {
+    color: #8b9692;
+}
+
+
+/* =========================
+   AQI LEVEL COLORS
+   These can be used by JS
+========================= */
+
+.aqi-good {
+    color: #32a852 !important;
+}
+
+.aqi-moderate {
+    color: #d5a900 !important;
+}
+
+.aqi-sensitive {
+    color: #e87519 !important;
+}
+
+.aqi-unhealthy {
+    color: #df3c3c !important;
+}
+
+.aqi-very-unhealthy {
+    color: #9b3d9b !important;
+}
+
+.aqi-hazardous {
+    color: #7c1d1d !important;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+button,
+.btn-submit,
+.btn-logout,
+#test {
+    display: inline-block;
+
+    border: none;
+    border-radius: 12px;
+
+    padding: 12px 22px;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+}
+
+button:hover,
+.btn-submit:hover,
+.btn-logout:hover,
+#test:hover {
+    transform: translateY(-2px);
+}
+
+/* Main green button */
+#test,
+.btn-submit {
+    background: #4caf73;
+    color: white;
+
+    box-shadow: 0 6px 15px rgba(76, 175, 115, 0.25);
+}
+
+#test:hover,
+.btn-submit:hover {
+    box-shadow: 0 8px 20px rgba(76, 175, 115, 0.35);
+}
+
+/* Make link inside #test white */
+#test a {
+    color: white;
+}
+
+/* Logout */
+.btn-logout {
+    margin-top: 10px;
+
+    background: #ffffff;
+    color: #596762;
+
+    border: 1px solid #dce4e1;
+}
+
+.btn-logout:hover {
+    background: #f5f8f7;
+}
+
+
+/* =========================
+   LOGIN / SIGNUP
+========================= */
+
+.login-box {
+    width: min(430px, 92%);
+
+    padding: 35px;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.82);
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 15px 40px rgba(50, 70, 65, 0.13);
+
+    backdrop-filter: blur(12px);
+}
+
+.login-box h2 {
+    margin-top: 0;
+    margin-bottom: 25px;
+
+    color: #30443c;
+}
+
+/* Inputs */
+
+.login-box input,
+.login-box select {
+    width: 100%;
+
+    padding: 13px 15px;
+
+    margin-bottom: 4px;
+
+    border: 1px solid #d8e1dd;
+    border-radius: 10px;
+
+    background: #f8faf9;
+
+    color: #33413c;
+
+    font-size: 14px;
+
+    outline: none;
+
+    transition:
+        border 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+.login-box input:focus,
+.login-box select:focus {
+    background: white;
+
+    border-color: #67b984;
+
+    box-shadow: 0 0 0 3px rgba(103, 185, 132, 0.15);
+}
+
+.login-box label {
+    display: block;
+
+    text-align: left;
+
+    margin-bottom: 7px;
+
+    font-size: 14px;
+
+    color: #53625d;
+}
+
+/* Login/signup button */
+
+.login-box button {
+    width: 100%;
+
+    margin-top: 8px;
+
+    background: #4caf73;
+    color: white;
+}
+
+/* Error */
+
+.error-message {
+    padding: 10px 14px;
+
+    border-radius: 9px;
+
+    background: #fff0f0;
+
+    color: #d94a4a;
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   PRETEST
+========================= */
+
+.pretest-container {
+    width: min(850px, 92%);
+
+    text-align: center;
+}
+
+.pretest-container > h1 {
+    margin-bottom: 5px;
+
+    color: #30443c;
+}
+
+.pretest-container > h2 {
+    margin-top: 0;
+
+    font-size: 18px;
+
+    color: #71807a;
+
+    font-weight: normal;
+}
+
+.pretest-container > p {
+    color: #7b8782;
+}
+
+
+/* Question card */
+
+.question-card {
+    margin: 20px 0;
+
+    padding: 24px 27px;
+
+    background: rgba(255, 255, 255, 0.82);
+
+    border: 1px solid rgba(255, 255, 255, 0.8);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(55, 75, 69, 0.09);
+
+    text-align: left;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.question-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 12px 30px rgba(55, 75, 69, 0.13);
+}
+
+.question-card h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+
+    font-size: 17px;
+
+    color: #35463f;
+
+    line-height: 1.6;
+}
+
+
+/* Answer option */
+
+.answer-option {
+    display: block;
+
+    padding: 13px 15px;
+
+    margin: 9px 0;
+
+    border: 1px solid #e0e7e4;
+
+    border-radius: 11px;
+
+    background: #fafcfb;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        border 0.2s ease,
+        transform 0.2s ease;
+}
+
+.answer-option:hover {
+    background: #f0f8f3;
+
+    border-color: #9bc9ab;
+
+    transform: translateX(3px);
+}
+
+.answer-option input {
+    margin-right: 9px;
+
+    accent-color: #4caf73;
+}
+
+.answer-option strong {
+    color: #4b685b;
+}
+
+
+/* Submit button */
+
+.pretest-container .btn-submit {
+    margin: 15px 0 5px;
+
+    padding: 13px 30px;
+
+    font-size: 15px;
+}
+
+
+/* =========================
+   PRETEST RESULT
+========================= */
+
+.score-card {
+    width: min(500px, 100%);
+
+    margin: 25px auto;
+
+    padding: 30px;
+
+    background: rgba(255, 255, 255, 0.84);
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 12px 30px rgba(55, 75, 69, 0.10);
+}
+
+.score-card h2 {
+    margin-top: 0;
+
+    color: #52635c;
+}
+
+.score {
+    font-size: 48px;
+
+    font-weight: bold;
+
+    color: #4caf73;
+}
+
+.result-card {
+    margin: 15px 0;
+
+    padding: 20px 23px;
+
+    border-radius: 16px;
+
+    text-align: left;
+
+    background: white;
+
+    box-shadow: 0 5px 18px rgba(50, 70, 65, 0.07);
+}
+
+.result-card h3 {
+    margin-top: 0;
+
+    line-height: 1.5;
+}
+
+.result-card.correct {
+    border-left: 5px solid #4caf73;
+}
+
+.result-card.incorrect {
+    border-left: 5px solid #e05252;
+}
+
+.correct-text {
+    color: #3ba564;
+
+    font-weight: bold;
+}
+
+.incorrect-text {
+    color: #df5050;
+
+    font-weight: bold;
+}
+
+
+/* =========================
+   ADVICE PAGE
+========================= */
+
+.advice-container {
+    width: min(850px, 92%);
+}
+
+.advice-container h1 {
+    text-align: center;
+
+    color: #30443c;
+
+    margin-bottom: 30px;
+}
+
+.advice-card {
+    margin: 18px 0;
+
+    padding: 24px 28px;
+
+    background: rgba(255, 255, 255, 0.84);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 8px 25px rgba(50, 70, 65, 0.09);
+}
+
+.advice-card h2 {
+    margin-top: 0;
+
+    color: #40594d;
+}
+
+.advice-card p {
+    line-height: 1.7;
+
+    color: #64716c;
+}
+
+.advice-card .how-to {
+    color: #40564b;
+
+    font-weight: bold;
+}
+
+.advice-card .tip {
+    padding: 12px 15px;
+
+    background: #f0f7f2;
+
+    border-radius: 10px;
+
+    color: #60746a;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+
+    .main-dashboard,
+    .login-box,
+    .pretest-container,
+    .advice-container {
+        margin-top: 25px;
+    }
+
+    .main-dashboard > h1 {
+        font-size: 25px;
+    }
+
+    .main-dashboard > h2 {
+        font-size: 14px;
+    }
+
+    .aqi-card {
+        padding: 22px 18px;
+    }
+
+    .question-card {
+        padding: 19px;
+    }
+
+    .question-card h3 {
+        font-size: 15px;
+    }
+
+    .answer-option {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .login-box {
+        padding: 25px 20px;
+    }
+
+    .score {
+        font-size: 40px;
+    }
+}

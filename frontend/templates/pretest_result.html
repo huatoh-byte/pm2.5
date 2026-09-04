@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="pretest-container">
+
+```
+<h1>ผลการทำแบบทดสอบ</h1>
+
+<div class="score-card">
+
+    <h2>คะแนนของคุณ</h2>
+
+    <div class="score">
+        {{ score }} / {{ total }}
+    </div>
+
+    <p>
+        คิดเป็น {{ ((score / total) * 100)|round|int }}%
+    </p>
+
+</div>
+
+<hr>
+
+<h2>รายละเอียดคำตอบ</h2>
+
+{% for result in results %}
+
+<div class="result-card {% if result.is_correct %}correct{% else %}incorrect{% endif %}">
+
+    <h3>
+        ข้อ {{ result.number }} {{ result.question }}
+    </h3>
+
+    {% if result.is_correct %}
+
+        <p class="correct-text">
+            ✓ ถูกต้อง
+        </p>
+
+        <p>
+            คำตอบของคุณ:
+            <strong>{{ result.selected }}</strong>
+        </p>
+
+    {% else %}
+
+        <p class="incorrect-text">
+            ✗ ไม่ถูกต้อง
+        </p>
+
+        <p>
+            คำตอบของคุณ:
+            <strong>
+                {{ result.selected if result.selected else 'ไม่ได้ตอบ' }}
+            </strong>
+        </p>
+
+        <p>
+            คำตอบที่ถูกต้อง:
+            <strong>{{ result.correct }}</strong>
+        </p>
+
+    {% endif %}
+
+</div>
+
+{% endfor %}
+
+<br>
+
+<a href="{{ url_for('main.pretest') }}" class="btn-submit">
+    ทำแบบทดสอบอีกครั้ง
+</a>
+
+<a href="{{ url_for('main.index') }}" class="btn-logout">
+    กลับหน้าหลัก
+</a>
+```
+
+</div>
+
+{% endblock %}

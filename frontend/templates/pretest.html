@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="pretest-container">
+
+```
+<h1>แบบทดสอบก่อนเรียน</h1>
+<h2>ความรู้เกี่ยวกับ PM2.5 และ AQI</h2>
+
+<p>
+    กรุณาเลือกคำตอบที่ถูกต้องที่สุดเพียงข้อเดียว
+</p>
+
+<form method="POST" action="{{ url_for('main.pretest') }}">
+
+    {% for item in questions %}
+
+    {% set question_number = loop.index %}
+
+    <div class="question-card">
+
+        <h3>
+            ข้อ {{ question_number }} {{ item.question }}
+        </h3>
+
+        {% for letter, option in item.options.items() %}
+
+        <label class="answer-option">
+
+            <input
+                type="radio"
+                name="question_{{ question_number }}"
+                value="{{ letter }}"
+                required
+            >
+
+            <strong>{{ letter }}.</strong>
+            {{ option }}
+
+        </label>
+
+        {% endfor %}
+
+    </div>
+
+    {% endfor %}
+
+    <button type="submit" class="btn-submit">
+        ส่งคำตอบ
+    </button>
+
+</form>
+
+<br>
+
+<a href="{{ url_for('main.index') }}">
+    ← กลับหน้าหลัก
+</a>
+```
+
+</div>
+
+{% endblock %}

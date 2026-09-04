@@ -1,44 +1,85 @@
 document.addEventListener('DOMContentLoaded', () => {
+
     const aqiContainer = document.getElementById('aqiContainer');
-    
-    if (aqiContainer && aqiContainer.dataset.pm25) {
-        const pm25Value = parseFloat(aqiContainer.dataset.pm25);
-        console.log('PM2.5 Value:', pm25Value);
-        
-        const div = document.getElementById("level");
-        div.classList.add("aqi-status"); // Optional: add class for CSS styling
-        const advice = document.getElementById("advice");
-    
-        if (pm25Value <= 50) {
-            div.textContent += "Good";
-            div.style.color = "green";
-            advice.textContent += "คุณภาพอากาศดี สามารถทำกิจกรรมกลางแจ้งได้ปกติ";
-            advice.style.color = "green";
-        } else if (pm25Value <= 100) {
-            div.textContent += "Moderate";
-            div.style.color = "gold";
-            advice.textContent += "คุณภาพอากาศปานกลาง ผู้ที่ไวต่อมลพิษควรสังเกตอาการ";
-            advice.style.color = "gold";
-        } else if (pm25Value <= 150) {
-            div.textContent += "Unhealthy for Sensitive Groups";
-            div.style.color = "orange";
-            advice.textContent += "กลุ่มเสี่ยงควรลดกิจกรรมกลางแจ้งที่ใช้แรงหรือเวลานาน";
-            advice.style.color = "orange";
-        } else if (pm25Value <= 200) {
-            div.textContent += "Unhealthy";
-            div.style.color = "red";
-            advice.textContent += "ควรลดกิจกรรมกลางแจ้ง กลุ่มเสี่ยงควรลดกิจกรรมที่อยู่นอกอาคาร";
-            advice.style.color = "red";
-        } else if (pm25Value <= 300) {
-            div.textContent += "Very Unhealthy";
-            div.style.color = "purple";
-            advice.textContent += "ควรหลีกเลี่ยงกิจกรรมกลางแจ้ง กลุ่มเสี่ยงควรอยู่ภายในอาคาร";\
-            advice.style.color = "purple";
-        } else {
-            div.textContent += "Hazardous";
-            div.style.color = "brown";
-            advice.textContent += "หลีกเลี่ยงการออกภายนอกอาคาร อยู่ในพื้นที่อากาศสะอาด และ ติดตามประกาศทางการ";
-            advice.style.color = "brown";
-        }
+
+    if (!aqiContainer || !aqiContainer.dataset.pm25) {
+        return;
     }
+
+    const aqiValue = parseFloat(aqiContainer.dataset.pm25);
+
+    console.log('AQI Value:', aqiValue);
+
+    const level = document.getElementById('level');
+    const advice = document.getElementById('advice');
+
+    if (!level || !advice || Number.isNaN(aqiValue)) {
+        return;
+    }
+
+    // Remove the original labels so we can rebuild them
+    level.innerHTML = '<strong>Level:</strong> ';
+    advice.innerHTML = '<strong>Advice:</strong> ';
+
+    if (aqiValue <= 50) {
+
+        level.innerHTML += 'Good';
+        level.className = 'aqi-good';
+
+        advice.innerHTML +=
+            'คุณภาพอากาศดี สามารถทำกิจกรรมกลางแจ้งได้ปกติ';
+
+        advice.className = 'aqi-good';
+
+    } else if (aqiValue <= 100) {
+
+        level.innerHTML += 'Moderate';
+        level.className = 'aqi-moderate';
+
+        advice.innerHTML +=
+            'คุณภาพอากาศปานกลาง ผู้ที่ไวต่อมลพิษควรสังเกตอาการ';
+
+        advice.className = 'aqi-moderate';
+
+    } else if (aqiValue <= 150) {
+
+        level.innerHTML += 'Unhealthy for Sensitive Groups';
+        level.className = 'aqi-sensitive';
+
+        advice.innerHTML +=
+            'กลุ่มเสี่ยงควรลดกิจกรรมกลางแจ้งที่ใช้แรงหรือเวลานาน';
+
+        advice.className = 'aqi-sensitive';
+
+    } else if (aqiValue <= 200) {
+
+        level.innerHTML += 'Unhealthy';
+        level.className = 'aqi-unhealthy';
+
+        advice.innerHTML +=
+            'ควรลดกิจกรรมกลางแจ้ง กลุ่มเสี่ยงควรลดกิจกรรมที่อยู่นอกอาคาร';
+
+        advice.className = 'aqi-unhealthy';
+
+    } else if (aqiValue <= 300) {
+
+        level.innerHTML += 'Very Unhealthy';
+        level.className = 'aqi-very-unhealthy';
+
+        advice.innerHTML +=
+            'ควรหลีกเลี่ยงกิจกรรมกลางแจ้ง กลุ่มเสี่ยงควรอยู่ภายในอาคาร';
+
+        advice.className = 'aqi-very-unhealthy';
+
+    } else {
+
+        level.innerHTML += 'Hazardous';
+        level.className = 'aqi-hazardous';
+
+        advice.innerHTML +=
+            'หลีกเลี่ยงการออกภายนอกอาคาร อยู่ในพื้นที่อากาศสะอาด และติดตามประกาศทางการ';
+
+        advice.className = 'aqi-hazardous';
+    }
+
 });

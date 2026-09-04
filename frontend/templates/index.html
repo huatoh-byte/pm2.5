@@ -3,6 +3,7 @@
 {% block content %}
 <div class="main-dashboard">
     <h1>Welcome, {{ user.username }}!</h1>
+    <br><h2>PM2.5 ไม่ได้เกิดจากแหล่งเดียว การปรับพฤติกรรมเล็ก ๆ ของหลายคน สามารถช่วยลดการปล่อยมลพิษและลดปัญหาฝุ่นได้<h2></br>
     <p><strong>Selected Location:</strong> {{ user.area }}</p>
 
     <hr>
@@ -17,6 +18,18 @@
             <p><strong>AQI Index:</strong> {{ air_info.aqi }}</p>
             <p><small>Last updated: {{ air_info.updated_at }}</small></p>
         </div>
+        <button id="test"><a href="{{ url_for('main.advice')}}">LOOK FOR ADVICE</a></button>
+        <hr>
+
+        <h3>แบบทดสอบความรู้ PM2.5</h3>
+
+        <p>
+            ทดสอบความรู้เกี่ยวกับ PM2.5 และ AQI ก่อนเริ่มเรียน
+        </p>
+
+        <a href="{{ url_for('main.pretest') }}" class="btn-submit">
+            เริ่มทำ Pre-test
+        </a>
     {% else %}
         <p><em>No live air quality data currently available for your location.</em></p>
     {% endif %}
