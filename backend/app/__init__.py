@@ -69,7 +69,6 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    if not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
-        #start_hourly_aqi_fetch()
+
 
     return app
