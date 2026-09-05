@@ -660,3 +660,40 @@ button:hover,
         font-size: 40px;
     }
 }
+
+.posttest-section {
+    margin-top: 40px;
+    padding: 25px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 16px;
+}
+
+.posttest-section h2 {
+    margin-bottom: 10px;
+}
+
+.posttest-section p {
+    margin-bottom: 15px;
+}
+
+.posttest-note {
+    font-size: 0.9rem;
+    opacity: 0.75;
+}
+
+.btn-posttest {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-weight: bold;
+    background-color: #2e7d32;
+    color: white;
+    transition: transform 0.2s ease;
+}
+
+.btn-posttest:hover {
+    transform: translateY(-2px);
+}
