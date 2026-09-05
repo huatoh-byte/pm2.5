@@ -4,6 +4,7 @@ import urllib3
 from flask import Blueprint, render_template, redirect, url_for, request, session, flash
 from app.models import db, User
 import app
+import time
 
 main = Blueprint('main', __name__)
 
@@ -21,18 +22,80 @@ def clean_string(text):
         return ""
     return text.replace(',', '').replace(' ', '').replace('\xa0', '').strip()
 
+
+def get_air4thai_data():
+    """Fetch Air4Thai data when the cache is empty or older than 1 hour."""
+
+    current_time = time.time()
+
+    # ถ้ามี cache และยังไม่เกิน 1 ชั่วโมง ใช้ข้อมูลเดิมทันที
+    if (
+        app.latest_aqi_data
+        and current_time - app.latest_aqi_updated_at < 3600
+    ):
+        return app.latest_aqi_data
+
+    try:
+        print("[AQI] Fetching data from Air4Thai...")
+
+        urllib3.disable_warnings(
+            urllib3.exceptions.InsecureRequestWarning
+        )
+
+        # ใช้ Session และปิด trust_env
+        # เพื่อหลีกเลี่ยงปัญหาเกี่ยวกับ environment/netrc
+        # ที่เคยเกิดใน Render
+        session = requests.Session()
+        session.trust_env = False
+
+        response = session.get(
+            "https://air4thai.pcd.go.th/services/getNewAQI_JSON.php",
+            timeout=(5, 12),
+            verify=False,
+            headers={
+                "User-Agent": "Mozilla/5.0"
+            }
+        )
+
+        response.raise_for_status()
+
+        new_data = response.json()
+
+        # ตรวจว่าข้อมูลที่ได้มี stations จริง
+        if not isinstance(new_data, dict) or 'stations' not in new_data:
+            raise ValueError("Air4Thai response does not contain stations")
+
+        app.latest_aqi_data.clear()
+        app.latest_aqi_data.update(new_data)
+        app.latest_aqi_updated_at = current_time
+
+        print(
+            f"[AQI] Data updated successfully. "
+            f"Stations: {len(new_data.get('stations', []))}"
+        )
+
+    except Exception as e:
+        print(f"[AQI] Failed to fetch Air4Thai data: {e}")
+
+    # ถ้า fetch ใหม่ไม่สำเร็จ แต่มี cache เก่า
+    # ก็ยังคืน cache เก่าได้
+    return app.latest_aqi_data
+
 def find_pm25_for_area(user_area):
     """Matches the user's selected area against the Air4Thai API station data."""
     # If the background fetch hasn't completed yet, trigger an immediate backup request
-    if not app.latest_aqi_data:
-        print("[AQI] Cache is not ready yet.")
+
+    data = get_air4thai_data()
+    if not data:
+        print("[AQI] No Air4Thai data available.")
         return None
 
-    print(f"[AQI] Cache ready. Stations: {len(app.latest_aqi_data.get('stations', []))}")
-    print(f"[AQI] Looking for user area: {user_area}")
 
-    stations = app.latest_aqi_data.get('stations', [])
+    stations = data.get('stations', [])
     clean_user_area = clean_string(user_area)
+
+    print(f"[AQI] Cache ready. Stations: {len(stations)}")
+    print(f"[AQI] Looking for user area: {user_area}")
 
     for station in stations:
         area_th = station.get('areaTH', '')

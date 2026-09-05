@@ -40,12 +40,5 @@
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
-{% if not air_info %}
-<script>
-    setTimeout(function () {
-        window.location.reload();
-    }, 5000);
-</script>
-{% endif %}
 
 {% endblock %}

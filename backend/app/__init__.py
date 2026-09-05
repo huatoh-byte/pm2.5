@@ -13,6 +13,7 @@ db = SQLAlchemy()
 
 # Global memory storage for the latest Air4Thai API data
 latest_aqi_data = {}
+latest_aqi_updated_at = 0
 
 def start_hourly_aqi_fetch():
     global latest_aqi_data
@@ -69,6 +70,6 @@ def create_app():
         db.create_all()
 
     if not app.debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
-        start_hourly_aqi_fetch()
+        #start_hourly_aqi_fetch()
 
     return app
