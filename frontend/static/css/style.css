@@ -156,6 +156,9 @@ hr {
    AQI LEVEL COLORS
    These can be used by JS
 ========================= */
+.aqi-very-good {
+    color: #00bfff;
+}
 
 .aqi-good {
     color: #32a852 !important;

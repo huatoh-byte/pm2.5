@@ -74,6 +74,8 @@ def index():
         return redirect(url_for('main.login'))
     
     current_user = User.query.get(session['user_id'])
+    if not current_user.pretest_completed:
+        return redirect(url_for('main.pretest'))
     air_info = find_pm25_for_area(current_user.area)
 
     return render_template('index.html', user=current_user, air_info=air_info)
@@ -120,6 +122,9 @@ def login():
         
         if user and user.check_password(password):
             session['user_id'] = user.id
+            if not user.pretest_completed:
+                return redirect(url_for('main.pretest'))
+
             return redirect(url_for('main.index'))
         else:
             flash('Invalid username or password!')
@@ -175,10 +180,10 @@ PRETEST_QUESTIONS = [
     {
         'question': 'หากค่า AQI เท่ากับ 120 คุณภาพอากาศอยู่ในระดับใด',
         'options': {
-            'A': 'Good',
-            'B': 'Moderate',
-            'C': 'Unhealthy for Sensitive Groups',
-            'D': 'Unhealthy'
+            'A': 'ดีมาก',
+            'B': 'ดี',
+            'C': 'ปานกลาง',
+            'D': 'เริ่มมีผลกระทบต่อสุขภาพ'
         },
         'answer': 'C'
     },
@@ -227,38 +232,57 @@ PRETEST_QUESTIONS = [
 
 @main.route('/pretest', methods=['GET', 'POST'])
 def pretest():
+    # ต้อง login ก่อน
     if 'user_id' not in session:
         return redirect(url_for('main.login'))
 
+    user = User.query.get(session['user_id'])
+
+    # เผื่อ account ถูกลบหรือหาไม่เจอ
+    if user is None:
+        session.pop('user_id', None)
+        return redirect(url_for('main.login'))
+
+    # ถ้าเคยทำแล้ว ห้ามกลับมาทำอีก
+    if user.pretest_completed:
+        return redirect(url_for('main.index'))
+
+    # เมื่อกด Submit
     if request.method == 'POST':
         score = 0
-        results = []
+        selected_answers = []
 
-        for i, question in enumerate(PRETEST_QUESTIONS):
-            question_number = i + 1
-            selected_answer = request.form.get(f'question_{question_number}')
-            correct_answer = question['answer']
+        # อ่านคำตอบทุกข้อ
+        for i, question in enumerate(PRETEST_QUESTIONS, start=1):
+            selected_answer = request.form.get(f'question_{i}')
+            selected_answers.append(selected_answer)
 
-            is_correct = selected_answer == correct_answer
+        # ป้องกันกรณีส่งคำตอบมาไม่ครบ
+        if any(answer is None for answer in selected_answers):
+            flash('กรุณาตอบคำถามให้ครบทุกข้อ')
+            return render_template(
+                'pretest.html',
+                questions=PRETEST_QUESTIONS
+            )
 
-            if is_correct:
+        # ตรวจคำตอบ
+        for selected_answer, question in zip(
+            selected_answers,
+            PRETEST_QUESTIONS
+        ):
+            if selected_answer == question['answer']:
                 score += 1
 
-            results.append({
-                'number': question_number,
-                'question': question['question'],
-                'selected': selected_answer,
-                'correct': correct_answer,
-                'is_correct': is_correct
-            })
+        # บันทึกคะแนน แต่ไม่แสดงให้ user
+        user.pretest_score = score
+        user.pretest_completed = True
 
-        return render_template(
-            'pretest_result.html',
-            score=score,
-            total=len(PRETEST_QUESTIONS),
-            results=results
-        )
+        db.session.commit()
 
+        # ทำเสร็จแล้วเข้า Dashboard ทันที
+        return redirect(url_for('main.index'))
+
+    # GET: แสดงข้อสอบตามปกติ
     return render_template(
         'pretest.html',
         questions=PRETEST_QUESTIONS

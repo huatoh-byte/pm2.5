@@ -1,85 +1,57 @@
-document.addEventListener('DOMContentLoaded', () => {
-
+document.addEventListener('DOMContentLoaded', function () {
     const aqiContainer = document.getElementById('aqiContainer');
 
-    if (!aqiContainer || !aqiContainer.dataset.pm25) {
+    if (!aqiContainer) {
         return;
     }
 
-    const aqiValue = parseFloat(aqiContainer.dataset.pm25);
+    const aqi = parseFloat(aqiContainer.dataset.aqi);
 
-    console.log('AQI Value:', aqiValue);
+    if (Number.isNaN(aqi)) {
+        return;
+    }
 
     const level = document.getElementById('level');
     const advice = document.getElementById('advice');
 
-    if (!level || !advice || Number.isNaN(aqiValue)) {
-        return;
-    }
+    if (aqi <= 25) {
+        level.textContent = 'ระดับ: ดีมาก';
+        advice.textContent =
+            'คุณภาพอากาศดีมาก สามารถทำกิจกรรมกลางแจ้งและใช้ชีวิตได้ตามปกติ';
 
-    // Remove the original labels so we can rebuild them
-    level.innerHTML = '<strong>Level:</strong> ';
-    advice.innerHTML = '<strong>Advice:</strong> ';
+        level.className = 'aqi-very-good';
+        advice.className = 'aqi-very-good';
 
-    if (aqiValue <= 50) {
+    } else if (aqi <= 50) {
+        level.textContent = 'ระดับ: ดี';
+        advice.textContent =
+            'คุณภาพอากาศดี สามารถทำกิจกรรมกลางแจ้งได้ตามปกติ โดยผู้ที่มีความเสี่ยงควรสังเกตอาการผิดปกติของตนเอง';
 
-        level.innerHTML += 'Good';
         level.className = 'aqi-good';
-
-        advice.innerHTML +=
-            'คุณภาพอากาศดี สามารถทำกิจกรรมกลางแจ้งได้ปกติ';
-
         advice.className = 'aqi-good';
 
-    } else if (aqiValue <= 100) {
+    } else if (aqi <= 100) {
+        level.textContent = 'ระดับ: ปานกลาง';
+        advice.textContent =
+            'ประชาชนทั่วไปควรลดกิจกรรมกลางแจ้งที่ใช้แรงมาก ส่วนกลุ่มเสี่ยงควรลดระยะเวลาทำกิจกรรมกลางแจ้งและสวมหน้ากากป้องกัน PM2.5 เมื่อออกนอกอาคาร';
 
-        level.innerHTML += 'Moderate';
         level.className = 'aqi-moderate';
-
-        advice.innerHTML +=
-            'คุณภาพอากาศปานกลาง ผู้ที่ไวต่อมลพิษควรสังเกตอาการ';
-
         advice.className = 'aqi-moderate';
 
-    } else if (aqiValue <= 150) {
+    } else if (aqi <= 200) {
+        level.textContent = 'ระดับ: เริ่มมีผลกระทบต่อสุขภาพ';
+        advice.textContent =
+            'ควรลดระยะเวลาหรือความหนักของกิจกรรมกลางแจ้ง และสวมหน้ากากป้องกัน PM2.5 โดยเฉพาะผู้ที่อยู่ในกลุ่มเสี่ยงควรระมัดระวังเป็นพิเศษ';
 
-        level.innerHTML += 'Unhealthy for Sensitive Groups';
         level.className = 'aqi-sensitive';
-
-        advice.innerHTML +=
-            'กลุ่มเสี่ยงควรลดกิจกรรมกลางแจ้งที่ใช้แรงหรือเวลานาน';
-
         advice.className = 'aqi-sensitive';
 
-    } else if (aqiValue <= 200) {
-
-        level.innerHTML += 'Unhealthy';
-        level.className = 'aqi-unhealthy';
-
-        advice.innerHTML +=
-            'ควรลดกิจกรรมกลางแจ้ง กลุ่มเสี่ยงควรลดกิจกรรมที่อยู่นอกอาคาร';
-
-        advice.className = 'aqi-unhealthy';
-
-    } else if (aqiValue <= 300) {
-
-        level.innerHTML += 'Very Unhealthy';
-        level.className = 'aqi-very-unhealthy';
-
-        advice.innerHTML +=
-            'ควรหลีกเลี่ยงกิจกรรมกลางแจ้ง กลุ่มเสี่ยงควรอยู่ภายในอาคาร';
-
-        advice.className = 'aqi-very-unhealthy';
-
     } else {
+        level.textContent = 'ระดับ: มีผลกระทบต่อสุขภาพ';
+        advice.textContent =
+            'ควรหลีกเลี่ยงกิจกรรมกลางแจ้งและพื้นที่ที่มีมลพิษทางอากาศสูง หากจำเป็นต้องออกนอกอาคารควรใช้อุปกรณ์ป้องกันตนเอง โดยเฉพาะผู้ที่อยู่ในกลุ่มเสี่ยง';
 
-        level.innerHTML += 'Hazardous';
-        level.className = 'aqi-hazardous';
-
-        advice.innerHTML +=
-            'หลีกเลี่ยงการออกภายนอกอาคาร อยู่ในพื้นที่อากาศสะอาด และติดตามประกาศทางการ';
-
-        advice.className = 'aqi-hazardous';
+        level.className = 'aqi-unhealthy';
+        advice.className = 'aqi-unhealthy';
     }
-
 });

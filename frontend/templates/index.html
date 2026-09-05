@@ -27,9 +27,6 @@
             ทดสอบความรู้เกี่ยวกับ PM2.5 และ AQI ก่อนเริ่มเรียน
         </p>
 
-        <a href="{{ url_for('main.pretest') }}" class="btn-submit">
-            เริ่มทำ Pre-test
-        </a>
     {% else %}
         <p><em>No live air quality data currently available for your location.</em></p>
     {% endif %}
@@ -37,7 +34,7 @@
     <br>
     <a href="{{ url_for('main.logout') }}" class="btn-logout">Log Out</a>
 </div>
-<div id="aqiContainer" data-pm25="{{ air_info.aqi if air_info else '' }}"></div>
+<div id="aqiContainer" data-aqi="{{ air_info.aqi if air_info else '' }}"></div>
 {% endblock %}
 
 {% block scripts %}

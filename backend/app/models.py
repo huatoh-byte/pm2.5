@@ -9,6 +9,9 @@ class User(db.Model):
     password_hash = db.Column(db.String(120), nullable=False)
     area = db.Column(db.String(100), nullable=False)
 
+    pretest_score = db.Column(db.Integer, nullable=True)
+    pretest_completed = db.Column(db.Boolean, nullable=False, default=False)
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
