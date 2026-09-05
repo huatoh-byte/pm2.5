@@ -33,7 +33,10 @@ def start_hourly_aqi_fetch():
                    latest_aqi_data.clear()
                    latest_aqi_data.update(new_data)
                    
-                   print("[AQI Fetcher] Data updated successfully!")
+                   print(
+                    f"[AQI Fetcher] Data updated successfully! "
+                    f"Stations: {len(latest_aqi_data.get('stations', []))}"
+                )
                    
                    # Fetch สำเร็จแล้ว รอ 1 ชั่วโมงก่อนอัปเดตใหม่
                    time.sleep(3600)

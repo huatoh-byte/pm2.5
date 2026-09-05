@@ -25,8 +25,11 @@ def find_pm25_for_area(user_area):
     """Matches the user's selected area against the Air4Thai API station data."""
     # If the background fetch hasn't completed yet, trigger an immediate backup request
     if not app.latest_aqi_data:
-        print("[AQI] Cache is not ready yet.")
-        return None
+    print("[AQI] Cache is not ready yet.")
+    return None
+
+    print(f"[AQI] Cache ready. Stations: {len(app.latest_aqi_data.get('stations', []))}")
+    print(f"[AQI] Looking for user area: {user_area}")
 
     stations = app.latest_aqi_data.get('stations', [])
     clean_user_area = clean_string(user_area)
@@ -39,6 +42,7 @@ def find_pm25_for_area(user_area):
 
         # Match cleaned text strings
         if clean_user_area in clean_area_th or clean_area_th in clean_user_area or clean_user_area in clean_name_th:
+            print(f"[AQI] Matched station: {name_th} | {area_th}")
             # Check 'AQILast' key instead of 'LastUpdate'
             aqi_last = station.get('AQILast', {})
             
