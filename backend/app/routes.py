@@ -25,8 +25,8 @@ def find_pm25_for_area(user_area):
     """Matches the user's selected area against the Air4Thai API station data."""
     # If the background fetch hasn't completed yet, trigger an immediate backup request
     if not app.latest_aqi_data:
-    print("[AQI] Cache is not ready yet.")
-    return None
+        print("[AQI] Cache is not ready yet.")
+        return None
 
     print(f"[AQI] Cache ready. Stations: {len(app.latest_aqi_data.get('stations', []))}")
     print(f"[AQI] Looking for user area: {user_area}")
