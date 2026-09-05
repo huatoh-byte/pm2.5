@@ -697,3 +697,20 @@ button:hover,
 .btn-posttest:hover {
     transform: translateY(-2px);
 }
+
+.aqi-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    text-align: center;
+}
+
+.aqi-table th,
+.aqi-table td {
+    padding: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.aqi-table th {
+    font-weight: bold;
+}
