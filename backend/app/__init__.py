@@ -22,16 +22,31 @@ def start_hourly_aqi_fetch():
         while True:
             try:
                 print("[AQI Fetcher] Requesting data from Air4Thai...")
-                response = requests.get(url, timeout=10, verify=False)
+                response = requests.get(
+                    url,
+                    timeout=10,
+                    verify=False
+               )
                 if response.status_code == 200:
-                    latest_aqi_data = response.json()
-                    print("[AQI Fetcher] Data updated successfully!")
+                   new_data = response.json()
+                   
+                   latest_aqi_data.clear()
+                   latest_aqi_data.update(new_data)
+                   
+                   print("[AQI Fetcher] Data updated successfully!")
+                   
+                   # Fetch สำเร็จแล้ว รอ 1 ชั่วโมงก่อนอัปเดตใหม่
+                   time.sleep(3600)
+
                 else:
                     print(f"[AQI Fetcher] HTTP error: {response.status_code}")
+                    # ถ้า Air4Thai ตอบ error ลองใหม่ใน 1 นาที
+                    time.sleep(60)
+
             except Exception as e:
                 print(f"[AQI Fetcher] Error fetching data: {e}")
-            
-            time.sleep(3600)
+                # ถ้า connection error / timeout ลองใหม่ใน 1 นาที
+                time.sleep(60)
 
     thread = threading.Thread(target=fetch_job, daemon=True)
     thread.start()

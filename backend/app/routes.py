@@ -25,14 +25,8 @@ def find_pm25_for_area(user_area):
     """Matches the user's selected area against the Air4Thai API station data."""
     # If the background fetch hasn't completed yet, trigger an immediate backup request
     if not app.latest_aqi_data:
-        try:
-            print("[AQI Fetcher] Cache empty on page load. Triggering instant fetch...")
-            urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-            resp = requests.get("https://air4thai.pcd.go.th/services/getNewAQI_JSON.php", timeout=5, verify=False)
-            if resp.status_code == 200:
-                app.latest_aqi_data = resp.json()
-        except Exception as e:
-            print(f"[AQI Fetcher] Instant fetch failed: {e}")
+        print("[AQI] Cache is not ready yet.")
+        return None
 
     stations = app.latest_aqi_data.get('stations', [])
     clean_user_area = clean_string(user_area)
